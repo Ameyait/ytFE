@@ -14,9 +14,11 @@ import {
 import { LayoutGrid, List } from "lucide-react";
 export default function VideoSection({
   videos = [],
+  total,
+  page,
   onFilterClick,
   onScrape,
-  loading
+  loading,
 }) {
   const [open, setOpen] = useState(false);
   const [view, setView] = useState("list");
@@ -53,11 +55,10 @@ export default function VideoSection({
 
           </div>
 
-          <p className="text-sm">
-            <span className="font-bold">{videos.length}</span>
-            <span className="text-gray-500">
-              {" "}
-              of {videos.length} videos
+          <p className="text-sm text-gray-600">
+            Total Videos:
+            <span className="ml-1 font-bold text-primary">
+              {total}
             </span>
           </p>
 
@@ -66,8 +67,8 @@ export default function VideoSection({
           <button
             onClick={() => setView("grid")}
             className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all ${view === "grid"
-                ? "bg-primary text-white shadow"
-                : "text-gray-600 hover:bg-gray-100"
+              ? "bg-primary text-white shadow"
+              : "text-gray-600 hover:bg-gray-100"
               }`}
           >
             <LayoutGrid size={16} />
@@ -77,8 +78,8 @@ export default function VideoSection({
           <button
             onClick={() => setView("list")}
             className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all ${view === "list"
-                ? "bg-primary text-white shadow"
-                : "text-gray-600 hover:bg-gray-100"
+              ? "bg-primary text-white shadow"
+              : "text-gray-600 hover:bg-gray-100"
               }`}
           >
             <List size={16} />
@@ -126,7 +127,7 @@ export default function VideoSection({
                     {video.channel}
                   </span>
 
-                 
+
 
                 </div>
 
@@ -278,16 +279,16 @@ export default function VideoSection({
 
                 </div>
 
-               <div>
-                 <button
-                  href={video.url}
-                  target="_blank"
-                  className="mt-6 flex   items-center justify-center gap-2 rounded-lg bg-primary py-1 px-3 cursor-pointer text-sm font-semibold text-white transition hover:opacity-90"
-                >
-                  YouTube
-                  <ExternalLink size={16} />
-                </button>
-               </div>
+                <div>
+                  <button
+                    href={video.url}
+                    target="_blank"
+                    className="mt-6 flex   items-center justify-center gap-2 rounded-lg bg-primary py-1 px-3 cursor-pointer text-sm font-semibold text-white transition hover:opacity-90"
+                  >
+                    YouTube
+                    <ExternalLink size={16} />
+                  </button>
+                </div>
 
               </div>
             </div>

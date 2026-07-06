@@ -23,16 +23,12 @@ export default function Home() {
 
   const getPagination = () => {
     const pages = [];
-
     if (totalPages <= 7) {
       return Array.from({ length: totalPages }, (_, i) => i + 1);
     }
-
     pages.push(1);
-
     let start = Math.max(page - 1, 2);
     let end = Math.min(page + 1, totalPages - 1);
-
     if (page <= 3) {
       start = 2;
       end = 4;
@@ -66,8 +62,10 @@ export default function Home() {
 
         <VideoSection
           loading={loading}
-          videos={data}
           onScrape={loadScrap}
+          videos={data}
+          total={total}
+          page={page}
           onFilterClick={() => setOpenFilter(true)}
         />
 
