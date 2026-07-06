@@ -14,6 +14,7 @@ export const useList = (category) => {
     const [totalPages, setTotalPages] = useState(0);
     const [hasNext, setHasNext] = useState(false);
     const [hasPrevious, setHasPrevious] = useState(false);
+    const [lastUpadte,setLastUpdate]=useState("")
     const url = "http://13.234.115.183:8000/";
     const displayVideos = async () => {
         try {
@@ -33,6 +34,7 @@ export const useList = (category) => {
             setTotalPages(response.total_pages);
             setHasNext(response.has_next);
             setHasPrevious(response.has_previous);
+            setLastUpdate(response.last_refreshed)
         } catch (err) {
             console.log(err);
         } finally {
@@ -80,6 +82,7 @@ export const useList = (category) => {
         totalPages,
         hasNext,
         hasPrevious,
+        lastUpadte
 
     };
 };

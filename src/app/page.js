@@ -20,6 +20,7 @@ export default function Home() {
     hasNext,
     displayVideos,
     hasPrevious,
+    lastUpadte,
   } = useList();
 
   const getPagination = () => {
@@ -62,6 +63,7 @@ export default function Home() {
         <SectionHeader title="Trending Kids Videos" />
         <VideoSection
           loading={loading}
+          lastUpadte={lastUpadte}
           onScrape={loadScrap}
           refreshVideos={displayVideos}
           videos={data}

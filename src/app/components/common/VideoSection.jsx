@@ -20,36 +20,37 @@ export default function VideoSection({
   onScrape,
   refreshVideos,
   loading,
+  lastUpadte
 }) {
   const [open, setOpen] = useState(false);
   const [view, setView] = useState("list");
   const [timeLeft, setTimeLeft] = useState(0);
   const [isDisabled, setIsDisabled] = useState(false);
   useEffect(() => {
-  if (!isDisabled) return;
+    if (!isDisabled) return;
 
-  const timer = setInterval(() => {
-    setTimeLeft((prev) => {
-      if (prev <= 1) {
-        clearInterval(timer);
+    const timer = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          clearInterval(timer);
 
-        // enable button
-        setIsDisabled(false);
+          // enable button
+          setIsDisabled(false);
 
-        // wait 3 seconds, then reload videos
-        setTimeout(() => {
-          refreshVideos();
-        }, 3000);
+          // wait 3 seconds, then reload videos
+          setTimeout(() => {
+            refreshVideos();
+          }, 3000);
 
-        return 0;
-      }
+          return 0;
+        }
 
-      return prev - 1;
-    });
-  }, 1000);
+        return prev - 1;
+      });
+    }, 1000);
 
-  return () => clearInterval(timer);
-}, [isDisabled, refreshVideos]);
+    return () => clearInterval(timer);
+  }, [isDisabled, refreshVideos]);
   const handleScrape = () => {
     onScrape();
     setIsDisabled(true);
@@ -93,37 +94,56 @@ export default function VideoSection({
             </button>
 
           </div>
+          <div className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-3 shadow-sm">
+            <div className="flex  items-center justify-center rounded-xl bg-blue-50">
+              <Clock3 size={18} className="text-primary" />
+            </div>
 
+            <div className="flex gap-2 items-center">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500">
+                Last Updated
+              </p>
+
+              <p className="text-sm font-semibold text-slate-800">
+                {lastUpadte.replace(" at ", " • ").replace(" IST", "")}
+              </p>
+            </div>
+          </div>
+
+
+
+        </div>
+        <div className="flex gap-2 items-center">
+          <div className="flex items-center rounded-xl border border-gray-200 bg-white p-1 shadow-sm">
+            <button
+              onClick={() => setView("grid")}
+              className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all ${view === "grid"
+                ? "bg-primary text-white shadow"
+                : "text-gray-600 hover:bg-gray-100"
+                }`}
+            >
+              <LayoutGrid size={16} />
+              <span>Grid</span>
+            </button>
+
+            <button
+              onClick={() => setView("list")}
+              className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all ${view === "list"
+                ? "bg-primary text-white shadow"
+                : "text-gray-600 hover:bg-gray-100"
+                }`}
+            >
+              <List size={16} />
+              <span>List</span>
+            </button>
+
+          </div>
           <p className="text-sm text-gray-600">
             Total Videos:
             <span className="ml-1 font-bold text-primary">
               {total}
             </span>
           </p>
-
-        </div>
-        <div className="flex items-center rounded-xl border border-gray-200 bg-white p-1 shadow-sm">
-          <button
-            onClick={() => setView("grid")}
-            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all ${view === "grid"
-              ? "bg-primary text-white shadow"
-              : "text-gray-600 hover:bg-gray-100"
-              }`}
-          >
-            <LayoutGrid size={16} />
-            <span>Grid</span>
-          </button>
-
-          <button
-            onClick={() => setView("list")}
-            className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all ${view === "list"
-              ? "bg-primary text-white shadow"
-              : "text-gray-600 hover:bg-gray-100"
-              }`}
-          >
-            <List size={16} />
-            <span>List</span>
-          </button>
         </div>
       </div>
 
