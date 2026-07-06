@@ -12,7 +12,7 @@ export const useList = (category) => {
   const [page, setPage] = useState(1);
   const [limit] = useState(10);
   const [total, setTotal] = useState(0);
-  const url = "http://13.234.115.183/:8000/"
+  const url = "http://13.234.115.183:8000/"
   const displayVideos = async () => {
     try {
       const resp = await axios.get(`${url}videos`, {
