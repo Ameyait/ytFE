@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Text } from "..";
 import {
   Eye,
@@ -18,10 +18,45 @@ export default function VideoSection({
   page,
   onFilterClick,
   onScrape,
+  refreshVideos,
   loading,
 }) {
   const [open, setOpen] = useState(false);
   const [view, setView] = useState("list");
+  const [timeLeft, setTimeLeft] = useState(0);
+  const [isDisabled, setIsDisabled] = useState(false);
+  useEffect(() => {
+  if (!isDisabled) return;
+
+  const timer = setInterval(() => {
+    setTimeLeft((prev) => {
+      if (prev <= 1) {
+        clearInterval(timer);
+
+        // enable button
+        setIsDisabled(false);
+
+        // wait 3 seconds, then reload videos
+        setTimeout(() => {
+          refreshVideos();
+        }, 3000);
+
+        return 0;
+      }
+
+      return prev - 1;
+    });
+  }, 1000);
+
+  return () => clearInterval(timer);
+}, [isDisabled, refreshVideos]);
+  const handleScrape = () => {
+    onScrape();
+    setIsDisabled(true);
+    setTimeLeft(5 * 60); // 5 minutes
+  };
+  const minutes = String(Math.floor(timeLeft / 60)).padStart(2, "0");
+  const seconds = String(timeLeft % 60).padStart(2, "0");
   return (
     <section className="pt-10">
       {/* Header */}
@@ -39,11 +74,15 @@ export default function VideoSection({
           <div className="flex items-center gap-3">
 
             <button
-              onClick={onScrape}
-              disabled={loading}
+              onClick={handleScrape}
+              disabled={loading || isDisabled}
               className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {loading ? "Scraping..." : "Scrape Videos"}
+              {loading
+                ? "Scraping..."
+                : isDisabled
+                  ? `Wait ${minutes}:${seconds}`
+                  : "Scrape Videos"}
             </button>
 
             <button

@@ -18,6 +18,7 @@ export default function Home() {
     total,
     totalPages,
     hasNext,
+    displayVideos,
     hasPrevious,
   } = useList();
 
@@ -59,21 +60,19 @@ export default function Home() {
     <>
       <div>
         <SectionHeader title="Trending Kids Videos" />
-
         <VideoSection
           loading={loading}
           onScrape={loadScrap}
+          refreshVideos={displayVideos}
           videos={data}
           total={total}
           page={page}
           onFilterClick={() => setOpenFilter(true)}
         />
-
         <FilterDrawer
           open={openFilter}
           onClose={() => setOpenFilter(false)}
         />
-
         {toast.open && (
           <div className="fixed top-[15%] right-6 z-[9999] animate-toast-in">
             <div className="rounded-xl border border-green-200 bg-white px-5 py-4 shadow-xl">

@@ -71,6 +71,7 @@ export const useList = (category) => {
         data,
         loading,
         loadScrap,
+        displayVideos, // <-- add this
         toast,
         page,
         setPage,
@@ -79,5 +80,6 @@ export const useList = (category) => {
         totalPages,
         hasNext,
         hasPrevious,
+
     };
 };
