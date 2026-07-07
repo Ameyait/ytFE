@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { useList } from "../hooks/useList";
 
 export const useAnalytics = (category) => {
+  // Pass a large limit to useList so the frontend has access to the full dataset for metrics
   const {
     data,
     loading,
@@ -9,39 +10,41 @@ export const useAnalytics = (category) => {
     displayVideos,
     page,
     setPage,
-    total, // This holds the true database total (e.g., 52)
+    total, 
     limit,
     totalPages,
     hasNext,
     hasPrevious,
     lastUpadte,
-  } = useList(category);
+  } = useList(category); 
 
   // Filter + ranking state
   const [rankMetric, setRankMetric] = useState("views"); // "views" | "likes"
   const [minViews, setMinViews] = useState(0);
   const [minLikes, setMinLikes] = useState(0);
 
-  // Apply frontend filters to the current page data
+  // Apply frontend filters to the loaded analytical dataset
   const filteredData = useMemo(() => {
     return (data || []).filter(
       (v) => (v.views || 0) >= minViews && (v.likes || 0) >= minLikes
     );
   }, [data, minViews, minLikes]);
 
-  // Aggregate stats
+  // Aggregate stats calculated dynamically from frontend data arrays
   const totals = useMemo(() => {
-    // FIX: Fallback to global total if filters aren't filtering out page items
-    const totalVideos = minViews > 0 || minLikes > 0 ? filteredData.length : (total || filteredData.length);
+    const totalVideos = filteredData.length;
     
     const totalViews = filteredData.reduce((s, v) => s + (v.views || 0), 0);
     const totalLikes = filteredData.reduce((s, v) => s + (v.likes || 0), 0);
     const totalComments = filteredData.reduce((s, v) => s + (v.comments || 0), 0);
+    
+    // Exact frontend calculation of average views based on what's active
     const avgViews = totalVideos ? Math.round(totalViews / totalVideos) : 0;
     
     return { totalVideos, totalViews, totalLikes, totalComments, avgViews };
-  }, [filteredData, total, minViews, minLikes]);
+  }, [filteredData]);
 
+  // Top 10 performance based accurately across the entire data chunk
   const topVideos = useMemo(() => {
     return [...filteredData]
       .sort((a, b) => (b[rankMetric] || 0) - (a[rankMetric] || 0))

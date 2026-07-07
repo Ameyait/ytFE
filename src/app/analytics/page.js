@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useState } from "react";
 import { useAnalytics } from "../analyticslog/page";
 import {
   BarChart,
@@ -28,6 +28,18 @@ const CHART_COLORS = [
   "#eb6834",
 ];
 
+// App Categories configurations list
+const CATEGORIES_LIST = [
+  { name: "All Categories", category: "" },
+  { name: "Rhymes", category: "rhymes" },
+  { name: "Stories", category: "stories" },
+  { name: "Cartoons", category: "cartoon" },
+  { name: "Animations", category: "animation" },
+  { name: "Birds", category: "birds" },
+  { name: "Bedtime", category: "bedtime" },
+  { name: "Moral", category: "moral" },
+];
+
 // Utility: Safe text truncation
 const truncateTitle = (title, maxLength = 30) => {
   if (!title) return "";
@@ -52,37 +64,52 @@ function MetricCard({ label, value }) {
   );
 }
 
-function FilterBar({
-  minViews,
-  setMinViews,
-  minLikes,
-  setMinLikes,
-  onRefetch,
-  isLoading,
-}) {
+// Updated FilterBar: Re-designed as a Category navigation tab selector bar
+function FilterBar({ activeCategory, onSelectCategory }) {
   return (
-    <div></div>
+    <div className="bg-white border border-slate-200 rounded-xl p-2 mb-8 shadow-sm">
+      <p className="text-xs font-bold text-slate-400 uppercase tracking-wider px-3 pt-2 pb-1">
+        Filter Dashboard By Content Category
+      </p>
+      <div className="flex flex-wrap gap-1.5 p-1">
+        {CATEGORIES_LIST.map((cat) => {
+          const isActive = activeCategory === cat.category;
+          return (
+            <button
+              key={cat.name}
+              onClick={() => onSelectCategory(cat.category)}
+              className={`px-4 py-2 text-xs font-semibold rounded-lg transition-all border ${
+                isActive
+                  ? "bg-blue-600 border-blue-600 text-white shadow-sm"
+                  : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+              }`}
+            >
+              {cat.name}
+            </button>
+          );
+        })}
+      </div>
+    </div>
   );
 }
 
-export default function AnalyticsPage({ category }) {
+export default function AnalyticsPage() {
+  // Local state initialized to view all data across categories by default
+  const [selectedCategory, setSelectedCategory] = useState("");
+
   const {
     loading,
     toast,
     refetch,
-    lastUpadte, // Preserved internal hook spelling mapping
+    lastUpadte, 
     rankMetric,
     setRankMetric,
-    minViews,
-    setMinViews,
-    minLikes,
-    setMinLikes,
     totals,
     topVideos,
     byCategory,
     byGroupCategory,
     engagementRanked,
-  } = useAnalytics(category);
+  } = useAnalytics(selectedCategory); // Dynamically queries based on selected tab selector
 
   // Formatting chart metrics correctly to safeguard against undefined hook results
   const topVideosChartData = useMemo(() => {
@@ -121,14 +148,10 @@ export default function AnalyticsPage({ category }) {
         </div>
       )}
 
-      {/* Dynamic Filters layout */}
+      {/* Dynamic Filters Nav layout */}
       <FilterBar
-        minViews={minViews}
-        setMinViews={setMinViews}
-        minLikes={minLikes}
-        setMinLikes={setMinLikes}
-        onRefetch={refetch}
-        isLoading={loading}
+        activeCategory={selectedCategory}
+        onSelectCategory={setSelectedCategory}
       />
 
       {loading ? (
@@ -139,7 +162,12 @@ export default function AnalyticsPage({ category }) {
       ) : (
         <div className="space-y-10">
           {/* Executive Metrics Overview Grid */}
-        
+          <section aria-label="Executive Summary Metrics" className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <MetricCard label="Total Videos" value={totals?.totalVideos || 0} />
+            <MetricCard label="Total Views" value={(totals?.totalViews || 0).toLocaleString()} />
+            <MetricCard label="Total Likes" value={(totals?.totalLikes || 0).toLocaleString()} />
+            <MetricCard label="Avg Views / Video" value={(totals?.avgViews || 0).toLocaleString()} />
+          </section>
 
           {/* Performance Deep Dives Split Layout */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -203,7 +231,7 @@ export default function AnalyticsPage({ category }) {
             {/* Views Distribution By Granular Category */}
             <section className="lg:col-span-3 bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
               <h2 className="text-sm font-bold text-slate-900 uppercase tracking-wider mb-6">Views Aggregate By Category</h2>
-              <div style={{ height: (byCategory?.length || 0) * 55 + 60 }}>
+              <div style={{ height: Math.max((byCategory?.length || 0) * 55 + 60, 200) }}>
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={byCategory || []} layout="vertical" margin={{ left: 20, right: 10 }}>
                     <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="#f1f5f9" />
