@@ -46,6 +46,11 @@ const menus = [
     href: "/moral",
     category: "moral",
   },
+   {
+    name: "Analytics",
+    href: "/analytics",
+    category: "analytics",
+  },
 ];
 export default function Header() {
   const pathname = usePathname();
