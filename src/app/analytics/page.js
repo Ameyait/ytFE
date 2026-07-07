@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo, useState } from "react";
-import { useAnalytics } from "../analyticslog/page";
+import { useAnalytics } from "../hooks/useAnalytics";
 import {
   BarChart,
   Bar,
@@ -109,7 +109,7 @@ export default function AnalyticsPage() {
     byCategory,
     byGroupCategory,
     engagementRanked,
-  } = useAnalytics(selectedCategory); // Dynamically queries based on selected tab selector
+  } = useAnalytics(selectedCategory); // Dynamically queries full unpaginated records matching selected category tab
 
   // Formatting chart metrics correctly to safeguard against undefined hook results
   const topVideosChartData = useMemo(() => {

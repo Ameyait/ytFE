@@ -1,27 +1,76 @@
-import { useMemo, useState } from "react";
-import { useList } from "../hooks/useList";
+import { useMemo, useState, useEffect, useRef } from "react";
+import axios from "axios";
 
 export const useAnalytics = (category) => {
-  // Pass a large limit to useList so the frontend has access to the full dataset for metrics
-  const {
-    data,
-    loading,
-    toast,
-    displayVideos,
-    page,
-    setPage,
-    total, 
-    limit,
-    totalPages,
-    hasNext,
-    hasPrevious,
-    lastUpadte,
-  } = useList(category); 
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [lastUpadte, setLastUpdate] = useState("");
+  const [toast, setToast] = useState({ open: false, message: "" });
 
   // Filter + ranking state
   const [rankMetric, setRankMetric] = useState("views"); // "views" | "likes"
   const [minViews, setMinViews] = useState(0);
   const [minLikes, setMinLikes] = useState(0);
+
+  const url = "http://13.234.115.183:8000/";
+  
+  // Use a ref to cancel older out-of-order fetch cycles if the category changes mid-stream
+  const fetchSessionRef = useRef(0);
+
+  const displayVideos = async () => {
+    const currentSession = ++fetchSessionRef.current;
+    try {
+      setLoading(true);
+      let allVideos = [];
+      let currentPage = 1;
+      let hasNextPage = true;
+      const currentLimit = 30; // Clean, standard limit that your backend loves
+
+      while (hasNextPage) {
+        // Break early if user switched categories while this loop was fetching
+        if (currentSession !== fetchSessionRef.current) return;
+
+        const res = await axios.get(`${url}videos`, {
+          params: {
+            category,
+            page: currentPage,
+            limit: currentLimit,
+          },
+        });
+
+        const response = res.data;
+        const pageVideos = response.videos || [];
+        
+        allVideos = [...allVideos, ...pageVideos];
+        
+        if (currentPage === 1) {
+          setLastUpdate(response.last_refreshed || "");
+        }
+
+        // Check backend flags to determine if we need to pull the next chunk
+        hasNextPage = response.has_next && pageVideos.length > 0;
+        currentPage++;
+
+        // Safety breaker to avoid accidental infinite loops if backend has faulty pagination flags
+        if (currentPage > 20) break; 
+      }
+
+      if (currentSession === fetchSessionRef.current) {
+        setData(allVideos);
+      }
+    } catch (err) {
+      console.error("Analytics fetch error:", err);
+    } finally {
+      if (currentSession === fetchSessionRef.current) {
+        setLoading(false);
+      }
+    }
+  };
+
+  // Re-fetch everything cleanly whenever the category switches
+  useEffect(() => {
+    displayVideos();
+  }, [category]);
 
   // Apply frontend filters to the loaded analytical dataset
   const filteredData = useMemo(() => {
@@ -38,7 +87,6 @@ export const useAnalytics = (category) => {
     const totalLikes = filteredData.reduce((s, v) => s + (v.likes || 0), 0);
     const totalComments = filteredData.reduce((s, v) => s + (v.comments || 0), 0);
     
-    // Exact frontend calculation of average views based on what's active
     const avgViews = totalVideos ? Math.round(totalViews / totalVideos) : 0;
     
     return { totalVideos, totalViews, totalLikes, totalComments, avgViews };
@@ -111,13 +159,6 @@ export const useAnalytics = (category) => {
     loading,
     toast,
     refetch: displayVideos,
-    page,
-    setPage,
-    total,
-    limit,
-    totalPages,
-    hasNext,
-    hasPrevious,
     lastUpadte,
     rankMetric,
     setRankMetric,
