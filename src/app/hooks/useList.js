@@ -92,6 +92,7 @@ export const useList = (category, config = {}) => {
         totalPages,
         hasNext,
         hasPrevious,
-        lastUpadte
+        lastUpadte,
+        
     };
 };

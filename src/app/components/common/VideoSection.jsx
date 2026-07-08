@@ -22,13 +22,13 @@ export default function VideoSection({
   onScrape,
   refreshVideos,
   loading,
-  lastUpdate
+  lastUpadte
 }) {
   const [open, setOpen] = useState(false);
   const [view, setView] = useState("list");
   const [timeLeft, setTimeLeft] = useState(0);
   const [isDisabled, setIsDisabled] = useState(false);
-
+  console.log(lastUpadte, "lastUpadte")
   useEffect(() => {
     if (!isDisabled) return;
 
@@ -58,9 +58,28 @@ export default function VideoSection({
     setTimeLeft(5 * 60); // 5 minutes Cooldown
   };
 
-  const minutes = String(Math.floor(timeLeft / 60)).padStart(2, "0");
-  const seconds = String(timeLeft % 60).padStart(2, "0");
+  const formatLastUpdated = (dateString) => {
+    if (!dateString) return "--";
 
+    // Convert: "08 July 2026 at 01:48:31 PM IST"
+    const formatted = dateString
+      .replace(" at ", " ")
+      .replace(" IST", "");
+
+    const date = new Date(formatted);
+
+    // If parsing fails, return original string
+    if (isNaN(date)) return dateString;
+
+    return new Intl.DateTimeFormat("en-IN", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    }).format(date);
+  };
   return (
     <section className="pt-10">
       {/* Header Controls */}
@@ -75,8 +94,8 @@ export default function VideoSection({
               {loading
                 ? "Scraping..."
                 : isDisabled
-                ? `Wait ${minutes}:${seconds}`
-                : "Scrape Videos"}
+                  ? `Wait ${minutes}:${seconds}`
+                  : "Scrape Videos"}
             </button>
 
             <button
@@ -87,7 +106,7 @@ export default function VideoSection({
             </button>
           </div>
 
-          <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-2 shadow-sm">
+          <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-6 py-2 shadow-sm">
             <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50">
               <Clock3 size={18} className="text-primary" />
             </div>
@@ -96,9 +115,7 @@ export default function VideoSection({
                 Last Updated
               </p>
               <p className="text-sm font-semibold text-slate-800">
-                {typeof lastUpdate === 'string' 
-                  ? lastUpdate.replace(" at ", " • ").replace(" IST", "") 
-                  : lastUpdate || "--"}
+                {formatLastUpdated(lastUpadte)}
               </p>
             </div>
           </div>
@@ -108,11 +125,10 @@ export default function VideoSection({
           <div className="flex items-center rounded-xl border border-gray-200 bg-white p-1 shadow-sm">
             <button
               onClick={() => setView("grid")}
-              className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all ${
-                view === "grid"
-                  ? "bg-primary text-white shadow"
-                  : "text-gray-600 hover:bg-gray-100"
-              }`}
+              className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all ${view === "grid"
+                ? "bg-primary text-white shadow"
+                : "text-gray-600 hover:bg-gray-100"
+                }`}
             >
               <LayoutGrid size={16} />
               <span>Grid</span>
@@ -120,11 +136,10 @@ export default function VideoSection({
 
             <button
               onClick={() => setView("list")}
-              className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all ${
-                view === "list"
-                  ? "bg-primary text-white shadow"
-                  : "text-gray-600 hover:bg-gray-100"
-              }`}
+              className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all ${view === "list"
+                ? "bg-primary text-white shadow"
+                : "text-gray-600 hover:bg-gray-100"
+                }`}
             >
               <List size={16} />
               <span>List</span>
@@ -275,7 +290,7 @@ export default function VideoSection({
                         <ExternalLink size={12} />
                       </a>
                     )}
-                    
+
                     {video.category && (
                       <span className="rounded-full bg-pink-500 px-3 py-1 text-xs font-semibold text-white">
                         {video.category}

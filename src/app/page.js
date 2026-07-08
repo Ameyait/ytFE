@@ -22,7 +22,6 @@ export default function Home() {
     hasPrevious,
     lastUpadte,
   } = useList();
-
   const getPagination = () => {
     const pages = [];
     if (totalPages <= 7) {
