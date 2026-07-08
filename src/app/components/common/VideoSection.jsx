@@ -24,10 +24,16 @@ export default function VideoSection({
   loading,
   lastUpadte
 }) {
-  const [open, setOpen] = useState(false);
-  const [view, setView] = useState("list");
-  const [timeLeft, setTimeLeft] = useState(0);
-  const [isDisabled, setIsDisabled] = useState(false);
+ 
+const [open, setOpen] = useState(false);
+const [view, setView] = useState("list");
+const [timeLeft, setTimeLeft] = useState(0);
+const [isDisabled, setIsDisabled] = useState(false);
+
+const minutes = String(Math.floor(timeLeft / 60)).padStart(2, "0");
+const seconds = String(timeLeft % 60).padStart(2, "0");
+
+console.log(lastUpadte, "lastUpadte");
   console.log(lastUpadte, "lastUpadte")
   useEffect(() => {
     if (!isDisabled) return;
@@ -61,14 +67,12 @@ export default function VideoSection({
   const formatLastUpdated = (dateString) => {
     if (!dateString) return "--";
 
-    // Convert: "08 July 2026 at 01:48:31 PM IST"
     const formatted = dateString
       .replace(" at ", " ")
       .replace(" IST", "");
 
     const date = new Date(formatted);
 
-    // If parsing fails, return original string
     if (isNaN(date)) return dateString;
 
     return new Intl.DateTimeFormat("en-IN", {
