@@ -95,13 +95,21 @@ export default function Home() {
         <div className="flex items-center gap-2">
           {/* Previous */}
 
-          <button
-            disabled={!hasPrevious}
-            onClick={() => setPage((prev) => prev - 1)}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-white hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-40"
-          >
-            <ChevronLeft size={18} />
-          </button>
+         <button
+  disabled={!hasNext}
+  onClick={() => {
+    console.log("Next clicked");
+    console.log("Old Page:", page);
+
+    setPage((prev) => {
+      console.log("New Page:", prev + 1);
+      return prev + 1;
+    });
+  }}
+  className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-white"
+>
+  <ChevronRight size={18} />
+</button>
 
           {/* Page Numbers */}
 
