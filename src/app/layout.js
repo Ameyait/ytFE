@@ -20,7 +20,7 @@ export default function RootLayout({ children }) {
     >
       <body className="min-h-full flex flex-col font-sans premium-bg">
         <Header />
-        <main className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-20 ">
+        <main className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-6 ">
           {children}
         </main>
       </body>
