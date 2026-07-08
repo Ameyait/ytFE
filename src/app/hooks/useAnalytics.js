@@ -17,55 +17,56 @@ export const useAnalytics = (category) => {
   // Use a ref to cancel older out-of-order fetch cycles if the category changes mid-stream
   const fetchSessionRef = useRef(0);
 
-  const displayVideos = async () => {
-    const currentSession = ++fetchSessionRef.current;
-    try {
-      setLoading(true);
-      let allVideos = [];
-      let currentPage = 1;
-      let hasNextPage = true;
-      const currentLimit = 30; // Clean, standard limit that your backend loves
+ const displayVideos = async () => {
+  const currentSession = ++fetchSessionRef.current;
+  try {
+    setLoading(true);
+    let allVideos = [];
+    let currentPage = 1;
+    let hasNextPage = true;
+    const currentLimit = 50; // Boosted to 50 to match your API's expected default limit
 
-      while (hasNextPage) {
-        // Break early if user switched categories while this loop was fetching
-        if (currentSession !== fetchSessionRef.current) return;
+    while (hasNextPage) {
+      if (currentSession !== fetchSessionRef.current) return;
 
-        const res = await axios.get(`${url}videos`, {
-          params: {
-            category,
-            page: currentPage,
-            limit: currentLimit,
-          },
-        });
+      const res = await axios.get(`${url}videos`, {
+        params: {
+          category,
+          page: currentPage,
+          limit: currentLimit,
+        },
+      });
 
-        const response = res.data;
-        const pageVideos = response.videos || [];
-        
-        allVideos = [...allVideos, ...pageVideos];
-        
-        if (currentPage === 1) {
-          setLastUpdate(response.last_refreshed || "");
-        }
-
-        // Check backend flags to determine if we need to pull the next chunk
-        hasNextPage = response.has_next && pageVideos.length > 0;
-        currentPage++;
-
-        // Safety breaker to avoid accidental infinite loops if backend has faulty pagination flags
-        if (currentPage > 20) break; 
+      const response = res.data;
+      const pageVideos = response.videos || [];
+      
+      allVideos = [...allVideos, ...pageVideos];
+      
+      if (currentPage === 1) {
+        setLastUpdate(response.last_refreshed || "");
       }
 
-      if (currentSession === fetchSessionRef.current) {
-        setData(allVideos);
-      }
-    } catch (err) {
-      console.error("Analytics fetch error:", err);
-    } finally {
-      if (currentSession === fetchSessionRef.current) {
-        setLoading(false);
-      }
+      // FIX: Calculate pagination accurately based on the backend "total" field
+      const totalAvailable = response.total || 0;
+      hasNextPage = allVideos.length < totalAvailable && pageVideos.length > 0;
+      
+      currentPage++;
+
+      // Safety breaker
+      if (currentPage > 20) break; 
     }
-  };
+
+    if (currentSession === fetchSessionRef.current) {
+      setData(allVideos);
+    }
+  } catch (err) {
+    console.error("Analytics fetch error:", err);
+  } finally {
+    if (currentSession === fetchSessionRef.current) {
+      setLoading(false);
+    }
+  }
+};
 
   // Re-fetch everything cleanly whenever the category switches
   useEffect(() => {

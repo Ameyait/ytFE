@@ -29,12 +29,12 @@ const CHART_COLORS = [
 ];
 
 // App Categories configurations list
+// App Categories configurations list
 const CATEGORIES_LIST = [
   { name: "All Categories", category: "" },
   { name: "Rhymes", category: "rhymes" },
-  { name: "Stories", category: "stories" },
   { name: "Cartoons", category: "cartoon" },
-  { name: "Animations", category: "animation" },
+  { name: "Animals", category: "animals" },
   { name: "Birds", category: "birds" },
   { name: "Bedtime", category: "bedtime" },
   { name: "Moral", category: "moral" },
