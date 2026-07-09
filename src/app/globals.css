@@ -154,4 +154,15 @@
     border-color: var(--color-border) !important;
     box-shadow: none !important;
   }
+  html,
+body {
+  overflow-x: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  display: none;
+}
 }

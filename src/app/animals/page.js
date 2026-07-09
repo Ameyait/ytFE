@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import {
   SectionHeader,
@@ -18,9 +19,54 @@ export default function Animals() {
     loading,
     loadScrap,
     toast,
+    page,
+    setPage,
+    total,
+    totalPages,
+    hasNext,
+    hasPrevious,
     displayVideos,
     lastUpadte,
   } = useList("animals");
+
+  const getPagination = () => {
+    const pages = [];
+
+    if (totalPages <= 7) {
+      return Array.from({ length: totalPages }, (_, i) => i + 1);
+    }
+
+    pages.push(1);
+
+    let start = Math.max(page - 1, 2);
+    let end = Math.min(page + 1, totalPages - 1);
+
+    if (page <= 3) {
+      start = 2;
+      end = 4;
+    }
+
+    if (page >= totalPages - 2) {
+      start = totalPages - 3;
+      end = totalPages - 1;
+    }
+
+    if (start > 2) {
+      pages.push("...");
+    }
+
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+
+    if (end < totalPages - 1) {
+      pages.push("...");
+    }
+
+    pages.push(totalPages);
+
+    return pages;
+  };
 
   return (
     <>
@@ -33,7 +79,8 @@ export default function Animals() {
           onScrape={loadScrap}
           refreshVideos={displayVideos}
           videos={data}
-          total={data.length}
+          total={total}
+          page={page}
           onFilterClick={() => setOpenFilter(true)}
         />
 
@@ -55,6 +102,57 @@ export default function Animals() {
             </div>
           </div>
         )}
+      </div>
+
+      {/* Pagination */}
+      <div className="my-10 flex justify-center">
+        <div className="flex items-center gap-2">
+          {/* Previous */}
+          <button
+            disabled={!hasPrevious}
+            onClick={() => setPage((prev) => prev - 1)}
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-white hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            <ChevronLeft size={18} />
+          </button>
+
+          {/* Page Numbers */}
+          {getPagination().map((item, index) => {
+            if (item === "...") {
+              return (
+                <span
+                  key={`ellipsis-${index}`}
+                  className="flex h-9 w-9 items-center justify-center text-gray-500"
+                >
+                  ...
+                </span>
+              );
+            }
+
+            return (
+              <button
+                key={item}
+                onClick={() => setPage(item)}
+                className={`flex h-9 w-9 items-center justify-center rounded-full border text-sm font-semibold transition-all ${
+                  page === item
+                    ? "border-primary bg-primary text-white shadow-lg shadow-primary/30"
+                    : "border-border bg-white text-heading hover:border-primary hover:text-primary"
+                }`}
+              >
+                {item}
+              </button>
+            );
+          })}
+
+          {/* Next */}
+          <button
+            disabled={!hasNext}
+            onClick={() => setPage((prev) => prev + 1)}
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-border bg-white hover:border-primary hover:text-primary disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            <ChevronRight size={18} />
+          </button>
+        </div>
       </div>
     </>
   );

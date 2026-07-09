@@ -14,7 +14,7 @@ export const useList = (category, config = {}) => {
 
   const [page, setPage] = useState(1);
 
-  // Number of records per page
+  // Records per page
   const limit = isAnalytics ? 2000 : 30;
 
   const [total, setTotal] = useState(0);
@@ -25,45 +25,38 @@ export const useList = (category, config = {}) => {
 
   const url = "http://13.234.115.183:8000/";
 
-const displayVideos = async () => {
-  try {
-    setLoading(true);
+  const displayVideos = async () => {
+    try {
+      setLoading(true);
 
-    console.log("Fetching Page:", page);
+      const { data: response } = await axios.get(`${url}videos`, {
+        params: {
+          category,
+          page,
+          limit,
+        },
+      });
 
-    const { data: response } = await axios.get(`${url}videos`, {
-      params: {
-        category,
-        page,
-        limit,
-      },
-    });
+      setData(response.videos || []);
 
-    console.log("API Response:", response);
-    console.log("Videos:", response.videos.length);
+      const totalVideos = response.total || 0;
 
-   setData(response.videos ?? []);
-setTotal(response.total ?? 0);
+      setTotal(totalVideos);
 
-const currentPage = response.filters_applied?.page || page;
-const currentLimit = response.filters_applied?.limit || limit;
+      const pages = Math.max(1, Math.ceil(totalVideos / limit));
 
-const pages = Math.ceil((response.total || 0) / currentLimit);
+      setTotalPages(pages);
 
-setPage(currentPage);
-setTotalPages(pages);
-setHasNext(currentPage < pages);
-setHasPrevious(currentPage > 1);
+      setHasNext(page < pages);
+      setHasPrevious(page > 1);
 
-setLastUpdate(response.last_refreshed ?? "");
-
-console.log("Current Page:", currentPage);
-console.log("Total Pages:", pages);
-console.log("Has Next:", currentPage < pages);
-  } finally {
-    setLoading(false);
-  }
-};
+      setLastUpdate(response.last_refreshed || "");
+    } catch (error) {
+      console.error("Error fetching videos:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const loadScrap = async () => {
     try {
@@ -110,6 +103,7 @@ console.log("Has Next:", currentPage < pages);
     totalPages,
     hasNext,
     hasPrevious,
+
     limit,
     lastUpadte,
 
