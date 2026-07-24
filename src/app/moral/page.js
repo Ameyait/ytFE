@@ -60,7 +60,7 @@ export default function Moral() {
   return (
     <>
       <div>
-        <SectionHeader title="Trending Kids Videos" />
+        <SectionHeader title="Trending Moral Videos" />
         <VideoSection
           loading={loading}
           lastUpadte={lastUpadte}

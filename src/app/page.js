@@ -1,6 +1,7 @@
 "use client";
 
-import { SectionHeader, VideoSection, FilterDrawer } from "./components";
+import {SectionHeader,  VideoSection, FilterDrawer } from "./components";
+
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
 import { useList } from "./hooks/useList";
@@ -59,7 +60,7 @@ export default function Home() {
   return (
     <>
       <div>
-        <SectionHeader title="Trending Kids Videos" />
+        <SectionHeader title="Trending Videos" lastUpadte={lastUpadte} />
         <VideoSection
           loading={loading}
           lastUpadte={lastUpadte}

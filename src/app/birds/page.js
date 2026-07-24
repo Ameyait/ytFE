@@ -60,7 +60,7 @@ export default function birds() {
   return (
     <>
       <div>
-        <SectionHeader title="Trending Kids Videos" />
+        <SectionHeader title="Trending Birds Videos" />
         <VideoSection
           loading={loading}
           lastUpadte={lastUpadte}

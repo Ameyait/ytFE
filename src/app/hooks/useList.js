@@ -23,7 +23,7 @@ export const useList = (category, config = {}) => {
   const [hasPrevious, setHasPrevious] = useState(false);
   const [lastUpadte, setLastUpdate] = useState("");
 
-  const url = "http://13.234.115.183:8000/";
+  const url = "http://16.112.191.150:8000/";
 
   const displayVideos = async () => {
     try {

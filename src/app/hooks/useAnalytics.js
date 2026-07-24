@@ -12,7 +12,7 @@ export const useAnalytics = (category) => {
   const [minViews, setMinViews] = useState(0);
   const [minLikes, setMinLikes] = useState(0);
 
-  const url = "http://13.234.115.183:8000/";
+  const url = "http://16.112.191.150:8000/";
   
   // Use a ref to cancel older out-of-order fetch cycles if the category changes mid-stream
   const fetchSessionRef = useRef(0);

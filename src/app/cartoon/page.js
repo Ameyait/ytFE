@@ -60,7 +60,7 @@ export default function Cartoon() {
   return (
     <>
       <div>
-        <SectionHeader title="Trending Kids Videos" />
+        <SectionHeader title="Trending Cartoon Videos" />
         <VideoSection
           loading={loading}
           lastUpadte={lastUpadte}

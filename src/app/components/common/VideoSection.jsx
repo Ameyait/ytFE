@@ -85,7 +85,7 @@ console.log(lastUpadte, "lastUpadte");
     }).format(date);
   };
   return (
-    <section className="pt-10">
+    <section className="pt-3">
       {/* Header Controls */}
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex flex-wrap items-center gap-4">
@@ -158,7 +158,7 @@ console.log(lastUpadte, "lastUpadte");
 
       {/* View Configurations */}
       {view === "list" ? (
-        <div className="mt-8 overflow-hidden rounded-3xl border bg-white">
+        <div className="mt-4 overflow-hidden rounded-3xl border bg-white">
           {videos.map((video) => (
             <div
               key={video.id}

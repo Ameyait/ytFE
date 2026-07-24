@@ -54,7 +54,7 @@ export default function Header() {
       <div className="mx-auto max-w-7xl py-3 px-4 sm:px-6 lg:px-20">
         {/* Layout container: justify-between on mobile, justify-start on desktop */}
         <div className="flex items-center justify-between lg:justify-start lg:gap-20">
-          
+
           {/* Brand Logo Identity */}
           <Link href="/" className="flex items-center gap-3">
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary">
@@ -64,18 +64,12 @@ export default function Header() {
             <div>
               <Text
                 as="h2"
-                variant="h5"
-                className="leading-none text-primary"
-              >
-                TollyKids
-              </Text>
-              <Text
-                as="p"
-                variant="label"
-                className="mt-1 text-[8px] uppercase tracking-[3px] text-muted"
+                variant="h4"
+                className="leading-none text-primary normal-case"
               >
                 Trending Tracker
               </Text>
+
             </div>
           </Link>
 
