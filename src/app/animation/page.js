@@ -60,7 +60,7 @@ export default function Animations() {
   return (
     <>
       <div>
-        <SectionHeader title="Trending Kids Videos" />
+        <SectionHeader title="Trending Kids Videos" lastUpadte={lastUpadte} />
         <VideoSection
           loading={loading}
           lastUpadte={lastUpadte}

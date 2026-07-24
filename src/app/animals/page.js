@@ -71,7 +71,7 @@ export default function Animals() {
   return (
     <>
       <div>
-        <SectionHeader title="Trending Animal Videos" />
+        <SectionHeader title="Trending Animal Videos" lastUpadte={lastUpadte} />
 
         <VideoSection
           loading={loading}

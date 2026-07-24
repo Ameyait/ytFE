@@ -8,8 +8,6 @@ import {
   Calendar,
   Clock3,
   ExternalLink,
-  X,
-  Menu,
   LayoutGrid,
   List
 } from "lucide-react";
@@ -24,17 +22,13 @@ export default function VideoSection({
   loading,
   lastUpadte
 }) {
- 
-const [open, setOpen] = useState(false);
-const [view, setView] = useState("list");
-const [timeLeft, setTimeLeft] = useState(0);
-const [isDisabled, setIsDisabled] = useState(false);
+  const [view, setView] = useState("list");
+  const [timeLeft, setTimeLeft] = useState(0);
+  const [isDisabled, setIsDisabled] = useState(false);
 
-const minutes = String(Math.floor(timeLeft / 60)).padStart(2, "0");
-const seconds = String(timeLeft % 60).padStart(2, "0");
+  const minutes = String(Math.floor(timeLeft / 60)).padStart(2, "0");
+  const seconds = String(timeLeft % 60).padStart(2, "0");
 
-console.log(lastUpadte, "lastUpadte");
-  console.log(lastUpadte, "lastUpadte")
   useEffect(() => {
     if (!isDisabled) return;
 
@@ -84,55 +78,51 @@ console.log(lastUpadte, "lastUpadte");
       hour12: true,
     }).format(date);
   };
+
   return (
     <section className="pt-3">
       {/* Header Controls */}
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex flex-wrap items-center gap-4">
-          <div className="flex items-center gap-3">
-            <button
-              onClick={handleScrape}
-              disabled={loading || isDisabled}
-              className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {loading
-                ? "Scraping..."
-                : isDisabled
-                  ? `Wait ${minutes}:${seconds}`
-                  : "Scrape Videos"}
-            </button>
+          {/* Scrape Button */}
+          <button
+            onClick={handleScrape}
+            disabled={loading || isDisabled}
+            className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {loading
+              ? "Scraping..."
+              : isDisabled
+                ? `Wait ${minutes}:${seconds}`
+                : "Scrape Videos"}
+          </button>
 
-            <button
-              onClick={() => setOpen(!open)}
-              className="flex h-11 w-11 items-center justify-center rounded-lg border border-gray-200 bg-white lg:hidden"
-            >
-              {open ? <X size={20} /> : <Menu size={22} />}
-            </button>
-          </div>
-
-          <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-6 py-2 shadow-sm">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-50">
+          {/* Last Updated Badge */}
+          {/* <div className="flex items-center gap-3 rounded-xl border border-slate-200 bg-white px-4 py-1.5 shadow-sm">
+            <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-blue-50">
               <Clock3 size={18} className="text-primary" />
             </div>
             <div>
-              <p className="text-xs font-medium uppercase tracking-wide text-slate-500">
+              <p className="text-[10px] font-medium uppercase tracking-wide text-slate-500">
                 Last Updated
               </p>
-              <p className="text-sm font-semibold text-slate-800">
+              <p className="text-xs font-semibold text-slate-800">
                 {formatLastUpdated(lastUpadte)}
               </p>
             </div>
-          </div>
+          </div> */}
         </div>
 
-        <div className="flex items-center gap-2">
+        {/* View Switcher & Total Counter */}
+        <div className="flex items-center gap-3">
           <div className="flex items-center rounded-xl border border-gray-200 bg-white p-1 shadow-sm">
             <button
               onClick={() => setView("grid")}
-              className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all ${view === "grid"
-                ? "bg-primary text-white shadow"
-                : "text-gray-600 hover:bg-gray-100"
-                }`}
+              className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+                view === "grid"
+                  ? "bg-primary text-white shadow"
+                  : "text-gray-600 hover:bg-gray-100"
+              }`}
             >
               <LayoutGrid size={16} />
               <span>Grid</span>
@@ -140,10 +130,11 @@ console.log(lastUpadte, "lastUpadte");
 
             <button
               onClick={() => setView("list")}
-              className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all ${view === "list"
-                ? "bg-primary text-white shadow"
-                : "text-gray-600 hover:bg-gray-100"
-                }`}
+              className={`flex items-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-all ${
+                view === "list"
+                  ? "bg-primary text-white shadow"
+                  : "text-gray-600 hover:bg-gray-100"
+              }`}
             >
               <List size={16} />
               <span>List</span>
@@ -221,7 +212,9 @@ console.log(lastUpadte, "lastUpadte");
                       Published
                     </div>
                     <h3 className="mt-2 text-sm font-bold text-red-500">
-                      {video.published_at ? new Date(video.published_at).toLocaleDateString() : "--"}
+                      {video.published_at
+                        ? new Date(video.published_at).toLocaleDateString()
+                        : "--"}
                     </h3>
                   </div>
 
@@ -315,7 +308,9 @@ console.log(lastUpadte, "lastUpadte");
 
                     <div className="flex items-center gap-2 text-slate-600">
                       <Calendar size={16} />
-                      {video.published_at ? new Date(video.published_at).toLocaleDateString() : "--"}
+                      {video.published_at
+                        ? new Date(video.published_at).toLocaleDateString()
+                        : "--"}
                     </div>
 
                     <div className="flex items-center gap-2 text-slate-600">
@@ -345,19 +340,3 @@ console.log(lastUpadte, "lastUpadte");
     </section>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

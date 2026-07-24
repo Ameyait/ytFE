@@ -60,7 +60,7 @@ export default function Stories() {
   return (
     <>
       <div>
-        <SectionHeader title="Trending Videos" />
+        <SectionHeader title="Trending Kids Videos" lastUpadte={lastUpadte} />
         <VideoSection
           loading={loading}
           lastUpadte={lastUpadte}

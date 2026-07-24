@@ -60,7 +60,7 @@ export default function Bedtime() {
   return (
     <>
       <div>
-        <SectionHeader title="Trending Bed Time Videos" />
+        <SectionHeader title="Trending Bed Time Videos" lastUpadte={lastUpadte} />
         <VideoSection
           loading={loading}
           lastUpadte={lastUpadte}

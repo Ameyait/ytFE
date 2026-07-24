@@ -60,7 +60,7 @@ export default function Rhymes() {
   return (
     <>
       <div>
-        <SectionHeader title="Trending Rhymes Videos" />
+        <SectionHeader title="Trending Rhymes Videos" lastUpadte={lastUpadte} />
         <VideoSection
           loading={loading}
           lastUpadte={lastUpadte}

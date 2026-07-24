@@ -9,12 +9,13 @@ import { usePathname } from "next/navigation";
 
 const menus = [
   { name: "Trending", href: "/", category: "" },
+  { name: "Moral", href: "/moral", category: "moral" },
   { name: "Rhymes", href: "/rhymes", category: "rhymes" },
   { name: "Animals", href: "/animals", category: "animals" },
   { name: "Cartoons", href: "/cartoon", category: "cartoon" },
   { name: "Birds", href: "/birds", category: "birds" },
   { name: "Bedtime", href: "/bedtime", category: "bedtime" },
-  { name: "Moral", href: "/moral", category: "moral" },
+ 
   { name: "Analytics", href: "/analytics", category: "analytics" },
 ];
 
@@ -56,22 +57,23 @@ export default function Header() {
         <div className="flex items-center justify-between lg:justify-start lg:gap-20">
 
           {/* Brand Logo Identity */}
-          <Link href="/" className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary">
-              <Sparkles size={20} className="text-white" />
-            </div>
+  <Link href="/" className="flex items-center gap-3 group">
+  {/* Icon Container */}
+  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary transition-transform group-hover:scale-105">
+    <Sparkles size={20} className="text-white" />
+  </div>
 
-            <div>
-              <Text
-                as="h2"
-                variant="h4"
-                className="leading-none text-primary normal-case"
-              >
-                Trending Tracker
-              </Text>
-
-            </div>
-          </Link>
+  {/* Text Container centered using inline flex alignment */}
+  <div className="flex items-center">
+    <Text
+      as="h2"
+      variant="h4"
+      className="m-3 p-0 text-base font-bold text-primary normal-case capitalize leading-none"
+    >
+      Trending Tracker
+    </Text>
+  </div>
+</Link>
 
           {/* Desktop Menu Wrapper */}
           <nav className="hidden lg:flex items-center gap-6">
